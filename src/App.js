@@ -1,54 +1,41 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-const foodILike = [
-    {
-        id:1,
-        name : "kimchi",
-        rating : 5
-    },
-    {
-        id:2,
-        name : "ramen",
-        rating : 4.9
-    },
-    {
-        id:3,
-        name : "삽겹살",
-        rating : 4.8
-    },
-    {
-        id:4,
-        name : "불고기",
-        rating : 4.7
-    }];
+class App extends React.Component{
+    constructor(props) {
+        super(props);
+        console.log("create");
+    }
+    state = {
+        count: 0
+    };
+    add= () => {
+        this.setState(current => ({ count: current.count + 1}));
+    };
+    minus = () => {
+        this.setState(current => ({ count: current.count - 1}));
+    };
+    componentDidMount() {
+        console.log("component rendered");
+    }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("component update");
+    }
 
-function renderFood(dish) {
-    return <Food favourite={dish.name}/>
-}
-function Food({favourite, rating}) {
+    componentWillUnmount() {
+        console.log("goodbye component");
+    }
 
-    return (
-        <div>
-            <h1>I love {favourite}</h1>
-            <h4>{rating}/5.0</h4>
-        </div>
-    );
-}
-
-Food.propTypes = {
-    name: PropTypes.string.isRequired,
-    rating: PropTypes.number
-};
-function App() {
-  return (
-    <div className="App">
-        {foodILike.map(dish => (
-            <Food key = {dish.id} favourite = {dish.name + "♥"} rating = {dish.rating}/>)
-        )}
-
-    </div>
-  );
+    render() {
+        console.log("rendering");
+        return (
+            <div>
+                <h1>The number is : {this.state.count}</h1>
+                <button onClick= {this.add}>Add</button>
+                <button onClick= {this.minus}>Minus</button>
+            </div>
+        );
+    }
 }
 
 export default App;
