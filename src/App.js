@@ -1,38 +1,54 @@
 import React from 'react';
-import PropTypes from "prop-types";
-
-class App extends React.Component{
+import axios from "axios";
+import Movie from "./Movie";
+class App extends React.Component {
     constructor(props) {
         super(props);
         console.log("create");
     }
+
     state = {
-        count: 0
+        isLoading: true,
+        movies: []
     };
-    add= () => {
-        this.setState(current => ({ count: current.count + 1}));
+    getMovies = async () => {
+        const {
+            data: {
+                data: {movies}
+            }
+        } = await axios.get("https://yts-proxy.now.sh/list_movies.json?sort_by=rating");
+        this.setState({movies : movies, isLoading: false})
     };
-    minus = () => {
-        this.setState(current => ({ count: current.count - 1}));
-    };
+
     componentDidMount() {
-        console.log("component rendered");
-    }
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log("component update");
+        // setTimeout(() => {
+        //     this.setState({isLoading : false, book : true});
+        // }, 6000);
+        this.getMovies();
     }
 
-    componentWillUnmount() {
-        console.log("goodbye component");
-    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     console.log("component update");
+    // }
+    //
+    // componentWillUnmount() {
+    //     console.log("goodbye component");
+    // }
 
     render() {
-        console.log("rendering");
+        const {isLoading, movies} = this.state;
         return (
             <div>
-                <h1>The number is : {this.state.count}</h1>
-                <button onClick= {this.add}>Add</button>
-                <button onClick= {this.minus}>Minus</button>
+                {isLoading ? "Loading..." : movies.map(movie => (
+                    <Movie
+                    key = {movie.id}
+                    id = {movie.id}
+                    year = {movie.year}
+                    title = {movie.title}
+                    summary = {movie.summary}
+                    poster = {movie.poster}
+                    />
+                ))}
             </div>
         );
     }
